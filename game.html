@@ -1,0 +1,16 @@
+<html>
+ <head>
+ 	 <title>Memory Game by viniciusmo</title>
+  </head>
+ <script type="text/javascript" src="game.js"></script>
+ <body>
+ 	 <div id="game">
+ 	 </div>
+ </body>
+  <script type="text/javascript">
+ 	var builderCardGame =  new BuilderCardGame();
+ 	cards = builderCardGame.doCardGame();
+ 	cardGame =  new CardGame(cards);
+ 	cardGame.show();
+ </script>
+</html>
