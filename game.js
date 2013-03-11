@@ -17,12 +17,49 @@ function Card(picture){
 		return FOLDER_IMAGES+'question.png';
 	}
 }
-function CardGame (cards){
+
+function ControllerLogicGame(){
+	var firstSelected;
+	var secondSelected;
+	var block = false;
+
+	this.doLogicGame =  function (card,callback){
+		if (!card.block && !block) {
+			if (firstSelected == null){
+				firstSelected = card;
+			}else if (secondSelected == null){
+				secondSelected = card;
+			}
+			card.visible = true;
+
+			if (firstSelected != null && secondSelected != null){
+				block = true;
+				var timer = setInterval(function(){
+					if (secondSelected.equals(firstSelected)){
+						firstSelected.block = true;
+						firstSelected.block = true;
+					}else{
+						firstSelected.visible  = false;
+						secondSelected.visible  = false;
+					}        				  		
+					firstSelected = null;
+					secondSelected = null;
+					callback();
+					clearInterval(timer);
+					block = false;
+				},2000);
+			} 
+			callback();
+		};
+	};
+
+}
+
+function CardGame (cards , controllerLogicGame){
 	var LINES = 4;
 	var COLS  = 5;
 	this.cards = cards;
-	var firstSelected;
-	var secondSelected;
+	var logicGame = controllerLogicGame;
 
 	this.clear = function (){
 		var game = document.getElementById("game");
@@ -43,32 +80,13 @@ function CardGame (cards){
 					cardImage.setAttribute("src",card.getQuestionImage());
 				}
 				cardImage.onclick =  (function(position,cardGame) {
-        			return function() {
-        				  card = cards[position];
-        				  if (!card.block) {
-        				  	 if (firstSelected == null){
-        				  	  firstSelected = card;
-	        				  }else if (secondSelected == null){
-	        				  	 secondSelected = card;
-	        				  }
-	        				  card.visible = true;
-	        				  if (firstSelected != null && secondSelected != null){
-	        				  	  if (secondSelected.equals(firstSelected)){
-	        				  			alert('acertou');
-	        				  			firstSelected.block = true;
-	        				  			firstSelected.block = true;
-	        				  		}else{
-	        				  			alert('errou');
-	        				  			firstSelected.visible  = false;
-	        				  			secondSelected.visible  = false;
-	        				  		}
-	        				  		
-	        				  			firstSelected = null;
-	        				  			secondSelected = null;
-	        				  }
-        				  };
-        				  cardGame.show();
-       			 	};
+					return function() {
+						card = cards[position];
+						var callback =  function (){
+							cardGame.show();
+						};
+						logicGame.doLogicGame(card,callback);
+					};
 				})(cardCount-1,this);
 
 				game.appendChild(cardImage);
@@ -81,31 +99,32 @@ function CardGame (cards){
 
 function BuilderCardGame(){
 	var pictures = new Array ('black.png','black.png',
-					'blue.png','blue.png',
-					'blue_2.png','blue_2.png',
-					'green.png','green.png',
-					'pink.png','pink.png',
-					'purple.png','purple.png',
-					'red.png','red.png',
-					'white.png','white.png',
-					'wine.png','wine.png',
-					'yellow.png','yellow.png');
+		'blue.png','blue.png',
+		'blue_2.png','blue_2.png',
+		'green.png','green.png',
+		'pink.png','pink.png',
+		'purple.png','purple.png',
+		'red.png','red.png',
+		'white.png','white.png',
+		'wine.png','wine.png',
+		'yellow.png','yellow.png');
 	this.doCardGame =  function (){
 		shufflePictures();
 		cards  = buildCardGame();
-		return cards;
+		cardGame =  new CardGame(cards, new ControllerLogicGame())
+		return cardGame;
 	}
 
 	var shufflePictures = function(){
-       var i = pictures.length, j, tempi, tempj;
-		  if ( i == 0 ) return false;
-		  while ( --i ) {
-		     j = Math.floor( Math.random() * ( i + 1 ) );
-		     tempi = pictures[i];
-		     tempj = pictures[j];
-		     pictures[i] = tempj;
-		     pictures[j] = tempi;
-		   }
+		var i = pictures.length, j, tempi, tempj;
+		if ( i == 0 ) return false;
+		while ( --i ) {
+			j = Math.floor( Math.random() * ( i + 1 ) );
+			tempi = pictures[i];
+			tempj = pictures[j];
+			pictures[i] = tempj;
+			pictures[j] = tempi;
+		}
 	}
 
 	var buildCardGame =  function (){
