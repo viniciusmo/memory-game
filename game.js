@@ -2,6 +2,7 @@ function Card(picture){
 	var FOLDER_IMAGES = 'resources/'
 	this.picture = picture;
 	this.visible = false;
+	this.block = false;
 
 	this.equals =  function (cardGame){
 		if (this.picture.valueOf() == cardGame.picture.valueOf()){
@@ -17,11 +18,19 @@ function Card(picture){
 	}
 }
 function CardGame (cards){
-	var LINES = 5;
-	var COLS  = 4;
+	var LINES = 4;
+	var COLS  = 5;
 	this.cards = cards;
+	var firstSelected;
+	var secondSelected;
+
+	this.clear = function (){
+		var game = document.getElementById("game");
+		game.innerHTML = '';
+	}
 
 	this.show =  function (){
+		this.clear();
 		var cardCount = 0;
 		var game = document.getElementById("game");
 		for(var i = 0 ; i < LINES; i++){
@@ -33,9 +42,35 @@ function CardGame (cards){
 				}else{
 					cardImage.setAttribute("src",card.getQuestionImage());
 				}
-				cardImage.onclick =  function (){
-					alert(cardCount)
-				}
+				cardImage.onclick =  (function(position,cardGame) {
+        			return function() {
+        				  card = cards[position];
+        				  if (!card.block) {
+        				  	 if (firstSelected == null){
+        				  	  firstSelected = card;
+	        				  }else if (secondSelected == null){
+	        				  	 secondSelected = card;
+	        				  }
+	        				  card.visible = true;
+	        				  if (firstSelected != null && secondSelected != null){
+	        				  	  if (secondSelected.equals(firstSelected)){
+	        				  			alert('acertou');
+	        				  			firstSelected.block = true;
+	        				  			firstSelected.block = true;
+	        				  		}else{
+	        				  			alert('errou');
+	        				  			firstSelected.visible  = false;
+	        				  			secondSelected.visible  = false;
+	        				  		}
+	        				  		
+	        				  			firstSelected = null;
+	        				  			secondSelected = null;
+	        				  }
+        				  };
+        				  cardGame.show();
+       			 	};
+				})(cardCount-1,this);
+
 				game.appendChild(cardImage);
 			}
 			var br = document.createElement("br");
