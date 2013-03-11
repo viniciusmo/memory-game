@@ -1,5 +1,6 @@
 function Card(picture){
 	var FOLDER_IMAGES = 'resources/'
+	var IMAGE_QUESTION  = "question.png"
 	this.picture = picture;
 	this.visible = false;
 	this.block = false;
@@ -14,7 +15,7 @@ function Card(picture){
 		return FOLDER_IMAGES+picture;
 	}
 	this.getQuestionImage =  function(){
-		return FOLDER_IMAGES+'question.png';
+		return FOLDER_IMAGES+IMAGE_QUESTION;
 	}
 }
 
@@ -22,34 +23,43 @@ function ControllerLogicGame(){
 	var firstSelected;
 	var secondSelected;
 	var block = false;
+    var TIME_SLEEP_BETWEEN_INTERVAL = 1000;
+ 	var eventController = this;
+
+    this.addEventListener =  function (eventName, callback){
+    	eventController[eventName] = callback;
+    };
 
 	this.doLogicGame =  function (card,callback){
 		if (!card.block && !block) {
 			if (firstSelected == null){
 				firstSelected = card;
-			}else if (secondSelected == null){
+				card.visible = true;
+			}else if (secondSelected == null && firstSelected != card){
 				secondSelected = card;
+				card.visible = true;
 			}
-			card.visible = true;
 
 			if (firstSelected != null && secondSelected != null){
 				block = true;
 				var timer = setInterval(function(){
 					if (secondSelected.equals(firstSelected)){
 						firstSelected.block = true;
-						firstSelected.block = true;
+						secondSelected.block = true;
+						eventController["correct"](); 
 					}else{
 						firstSelected.visible  = false;
 						secondSelected.visible  = false;
+						eventController["wrong"]();
 					}        				  		
 					firstSelected = null;
 					secondSelected = null;
-					callback();
+					eventController["show"]();
 					clearInterval(timer);
 					block = false;
-				},2000);
+				},TIME_SLEEP_BETWEEN_INTERVAL);
 			} 
-			callback();
+			eventController["show"]();
 		};
 	};
 
@@ -85,7 +95,19 @@ function CardGame (cards , controllerLogicGame){
 						var callback =  function (){
 							cardGame.show();
 						};
-						logicGame.doLogicGame(card,callback);
+						logicGame.addEventListener("correct",function (){
+							 alert("acertei");
+						});
+						logicGame.addEventListener("wrong",function (){
+							 alert("wrong");
+						});
+
+						logicGame.addEventListener("show",function (){
+							cardGame.show();
+						});
+
+						logicGame.doLogicGame(card);
+						
 					};
 				})(cardCount-1,this);
 
