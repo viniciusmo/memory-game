@@ -1,3 +1,21 @@
+function ScoreBoardGameControl (){
+	var score = 0;
+	var POINT_GAME = 10;
+
+	this.updateScore =  function (){
+		var scoreDiv = document.getElementById("score");
+		scoreDiv.innerHTML = score;
+	}
+
+	this.incrementScore =  function (){
+		score+= POINT_GAME;
+	}
+
+	this.decrementScore =  function (){
+		score-= POINT_GAME;
+	}
+}
+
 function Card(picture){
 	var FOLDER_IMAGES = 'resources/'
 	var IMAGE_QUESTION  = "question.png"
@@ -23,12 +41,12 @@ function ControllerLogicGame(){
 	var firstSelected;
 	var secondSelected;
 	var block = false;
-    var TIME_SLEEP_BETWEEN_INTERVAL = 1000;
- 	var eventController = this;
+	var TIME_SLEEP_BETWEEN_INTERVAL = 1000;
+	var eventController = this;
 
-    this.addEventListener =  function (eventName, callback){
-    	eventController[eventName] = callback;
-    };
+	this.addEventListener =  function (eventName, callback){
+		eventController[eventName] = callback;
+	};
 
 	this.doLogicGame =  function (card,callback){
 		if (!card.block && !block) {
@@ -54,9 +72,9 @@ function ControllerLogicGame(){
 					}        				  		
 					firstSelected = null;
 					secondSelected = null;
-					eventController["show"]();
 					clearInterval(timer);
 					block = false;
+					eventController["show"]();
 				},TIME_SLEEP_BETWEEN_INTERVAL);
 			} 
 			eventController["show"]();
@@ -65,11 +83,12 @@ function ControllerLogicGame(){
 
 }
 
-function CardGame (cards , controllerLogicGame){
+function CardGame (cards , controllerLogicGame,scoreBoard){
 	var LINES = 4;
 	var COLS  = 5;
 	this.cards = cards;
 	var logicGame = controllerLogicGame;
+	var scoreBoardGameControl = scoreBoard;
 
 	this.clear = function (){
 		var game = document.getElementById("game");
@@ -78,6 +97,7 @@ function CardGame (cards , controllerLogicGame){
 
 	this.show =  function (){
 		this.clear();
+		scoreBoardGameControl.updateScore();
 		var cardCount = 0;
 		var game = document.getElementById("game");
 		for(var i = 0 ; i < LINES; i++){
@@ -96,10 +116,12 @@ function CardGame (cards , controllerLogicGame){
 							cardGame.show();
 						};
 						logicGame.addEventListener("correct",function (){
-							 alert("acertei");
+							scoreBoardGameControl.incrementScore();
+							scoreBoardGameControl.updateScore();
 						});
 						logicGame.addEventListener("wrong",function (){
-							 alert("wrong");
+							scoreBoardGameControl.decrementScore();
+							scoreBoardGameControl.updateScore();
 						});
 
 						logicGame.addEventListener("show",function (){
@@ -130,10 +152,12 @@ function BuilderCardGame(){
 		'white.png','white.png',
 		'wine.png','wine.png',
 		'yellow.png','yellow.png');
+
 	this.doCardGame =  function (){
 		shufflePictures();
 		cards  = buildCardGame();
-		cardGame =  new CardGame(cards, new ControllerLogicGame())
+		cardGame =  new CardGame(cards, new ControllerLogicGame(), new ScoreBoardGameControl())
+		cardGame.clear();
 		return cardGame;
 	}
 
@@ -158,4 +182,14 @@ function BuilderCardGame(){
 		};
 		return cards;
 	}
+}
+
+function GameControl (){
+
+}
+
+GameControl.createGame = function(){
+	var builderCardGame =  new BuilderCardGame();
+	cardGame = builderCardGame.doCardGame();
+	cardGame.show();
 }
