@@ -142,16 +142,16 @@ function CardGame (cards , controllerLogicGame,scoreBoard){
 }
 
 function BuilderCardGame(){
-	var pictures = new Array ('black.png','black.png',
-		'blue.png','blue.png',
-		'blue_2.png','blue_2.png',
-		'green.png','green.png',
-		'pink.png','pink.png',
-		'purple.png','purple.png',
-		'red.png','red.png',
-		'white.png','white.png',
-		'wine.png','wine.png',
-		'yellow.png','yellow.png');
+	var pictures = new Array ('10.png','10.png',
+		'1.png','1.png',
+		'2.png','2.png',
+		'3.png','3.png',
+		'4.png','4.png',
+		'5.png','5.png',
+		'6.png','6.png',
+		'7.png','7.png',
+		'8.png','8.png',
+		'9.png','9.png');
 
 	this.doCardGame =  function (){
 		shufflePictures();
