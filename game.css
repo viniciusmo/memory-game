@@ -1,8 +1,36 @@
 .main{
-    width:800px;
+    width:660px;
     margin:0 auto;
 }
 
 img {
 	margin : 10 0 0 10;
+}
+
+#score{
+	margin : 0 0 0 500px;
+	font-size: 25px;
+}
+
+
+.button_game {
+    background: -moz-linear-gradient(center top , #EDEDED 5%, #DFDFDF 100%) repeat scroll 0 0 #EDEDED;
+    border: 1px solid #DCDCDC;
+    border-radius: 6px 6px 6px 6px;
+    box-shadow: 0 1px 0 0 #FFFFFF inset;
+    color: #777777;
+    display: inline-block;
+    font-family: arial;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 6px 24px;
+    text-decoration: none;
+    text-shadow: 1px 1px 0 #FFFFFF;
+}
+.button_game:hover {
+    background: -moz-linear-gradient(center top , #DFDFDF 5%, #EDEDED 100%) repeat scroll 0 0 #DFDFDF;
+}
+.button_game:active {
+    position: relative;
+    top: 1px;
 }

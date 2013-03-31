@@ -1,14 +1,22 @@
 function ScoreBoardGameControl (){
 	var score = 0;
 	var POINT_GAME = 10;
+	var TEXT_SCORE = "Score : "
+
+	var TOTAL_CORRECT = 10;
+	var corrects = 0;
 
 	this.updateScore =  function (){
 		var scoreDiv = document.getElementById("score");
-		scoreDiv.innerHTML = score;
+		scoreDiv.innerHTML =  TEXT_SCORE + score;
 	}
 
 	this.incrementScore =  function (){
+		corrects++;
 		score+= POINT_GAME;
+		if (corrects ==  TOTAL_CORRECT){
+			alert("Fim de Jogo! Seu Score foi " + score);
+		}
 	}
 
 	this.decrementScore =  function (){
